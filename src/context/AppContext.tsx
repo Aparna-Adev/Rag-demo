@@ -18,21 +18,22 @@ interface AppContextValue {
 
 const AppContext=createContext<AppContextValue|null>(null)
 const readStorage=<T,>(key:string,fallback:T):T=>{try{const value=localStorage.getItem(key);return value?JSON.parse(value) as T:fallback}catch{return fallback}}
+const readArray=<T,>(key:string,fallback:T[]):T[]=>{const value=readStorage<unknown>(key,fallback);return Array.isArray(value)?value as T[]:fallback}
 
 export function AppProvider({children}:{children:ReactNode}){
-  const [messages,setMessages]=useState<ChatItem[]>(()=>readStorage('hr-chat',[welcomeMessage]))
-  const [documents,setDocuments]=useState<PolicyDocument[]>(()=>readStorage('hr-documents',initialDocuments))
+  const [messages,setMessages]=useState<ChatItem[]>(()=>readArray('hr-chat',[welcomeMessage]))
+  const [documents,setDocuments]=useState<PolicyDocument[]>(()=>readArray('hr-documents',initialDocuments))
   const [selectedCategory,setCategory]=useState('All Policies')
   const [retrievedDocuments,setRetrievedDocuments]=useState<RetrievedDocument[]>([])
   const [suggestions,setSuggestions]=useState(suggestionsByCategory['All Policies'])
   const [confidence,setConfidence]=useState(0)
   const [metadata,setMetadata]=useState<ResponseMetadata|null>(null)
-  const [theme,setTheme]=useState<Theme>(()=>readStorage('hr-theme','light'))
+  const [theme,setTheme]=useState<Theme>(()=>readStorage<unknown>('hr-theme','light')==='dark'?'dark':'light')
   const [notifications,setNotifications]=useState<NotificationItem[]>(initialNotifications)
-  const [sidebarOpen,setSidebarOpen]=useState(()=>readStorage('hr-sidebar',false))
+  const [sidebarOpen,setSidebarOpen]=useState(()=>readStorage<unknown>('hr-sidebar',false)===true)
   const [loading,setLoading]=useState(false)
-  const [bookmarks,setBookmarks]=useState<ChatItem[]>(()=>readStorage('hr-bookmarks',[]))
-  const [recentQuestions,setRecentQuestions]=useState<string[]>(()=>readStorage('hr-recent',['How many casual leaves are allowed?','What is the work from home policy?','What is the notice period?','Can I carry forward earned leave?','How is PF calculated?']))
+  const [bookmarks,setBookmarks]=useState<ChatItem[]>(()=>readArray('hr-bookmarks',[]))
+  const [recentQuestions,setRecentQuestions]=useState<string[]>(()=>readArray('hr-recent',['How many casual leaves are allowed?','What is the work from home policy?','What is the notice period?','Can I carry forward earned leave?','How is PF calculated?']).filter(item=>typeof item==='string'))
   const [view,setView]=useState<View>('chat'); const [toast,setToast]=useState(''); const [selectedDocument,setSelectedDocument]=useState<PolicyDocument|null>(null)
 
   useEffect(()=>{document.documentElement.classList.toggle('dark',theme==='dark');localStorage.setItem('hr-theme',JSON.stringify(theme))},[theme])
