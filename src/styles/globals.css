@@ -1,0 +1,33 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { @apply border-slate-200; scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+  html { color-scheme: light; }
+  body { @apply m-0 min-w-[320px] bg-slate-50 font-sans antialiased; }
+  body { text-rendering: optimizeLegibility; }
+  button, input { font: inherit; }
+  button { cursor: pointer; }
+  button { @apply transition-colors; }
+  :focus-visible { @apply outline-none ring-2 ring-blue-500 ring-offset-2; }
+}
+
+@layer components {
+  .icon-button { @apply grid h-10 w-10 place-items-center rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-50; }
+  .section-label { @apply px-2 text-[10px] font-bold uppercase tracking-[.14em] text-slate-400; }
+  .typing-dot { @apply h-1.5 w-1.5 animate-bounce rounded-full bg-blue-500; }
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+@media (max-width: 767px) {
+  .chat-scroll { padding-bottom: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
