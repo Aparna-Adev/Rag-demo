@@ -37,11 +37,11 @@ export function AppProvider({children}:{children:ReactNode}){
   const [view,setView]=useState<View>('chat'); const [toast,setToast]=useState(''); const [selectedDocument,setSelectedDocument]=useState<PolicyDocument|null>(null)
 
   useEffect(()=>{document.documentElement.classList.toggle('dark',theme==='dark');localStorage.setItem('hr-theme',JSON.stringify(theme))},[theme])
-  useEffect(()=>localStorage.setItem('hr-chat',JSON.stringify(messages)),[messages])
-  useEffect(()=>localStorage.setItem('hr-documents',JSON.stringify(documents)),[documents])
-  useEffect(()=>localStorage.setItem('hr-bookmarks',JSON.stringify(bookmarks)),[bookmarks])
-  useEffect(()=>localStorage.setItem('hr-recent',JSON.stringify(recentQuestions)),[recentQuestions])
-  useEffect(()=>localStorage.setItem('hr-sidebar',JSON.stringify(sidebarOpen)),[sidebarOpen])
+  useEffect(()=>{localStorage.setItem('hr-chat',JSON.stringify(messages))},[messages])
+  useEffect(()=>{localStorage.setItem('hr-documents',JSON.stringify(documents))},[documents])
+  useEffect(()=>{localStorage.setItem('hr-bookmarks',JSON.stringify(bookmarks))},[bookmarks])
+  useEffect(()=>{localStorage.setItem('hr-recent',JSON.stringify(recentQuestions))},[recentQuestions])
+  useEffect(()=>{localStorage.setItem('hr-sidebar',JSON.stringify(sidebarOpen))},[sidebarOpen])
 
   const showToast=useCallback((message:string)=>{setToast(message);window.setTimeout(()=>setToast(''),2500)},[])
   const setSelectedCategory=useCallback((category:string)=>{setCategory(category);setSuggestions(suggestionsByCategory[category]??suggestionsByCategory['All Policies']);setRetrievedDocuments(prev=>category==='All Policies'?prev:prev.filter(d=>d.category===category));showToast(`${category} policies selected`)},[showToast])
