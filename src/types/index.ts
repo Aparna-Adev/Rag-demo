@@ -1,5 +1,71 @@
 import type { LucideIcon } from 'lucide-react'
 
+export type Theme = 'light' | 'dark'
+export type View = 'chat' | 'dashboard'
 export type Category = { label: string; icon: LucideIcon }
-export type RetrievedDocument = { name: string; page: string; section?: string; score: number }
-export type ChatItem = { id: number; role: 'user' | 'assistant'; content: string; detail?: string }
+
+export interface User {
+  id: string
+  name: string
+  role: string
+  initials: string
+}
+
+export interface PolicyDocument {
+  id: string
+  name: string
+  type: 'PDF' | 'DOCX' | 'TXT'
+  size: string
+  pages: number
+  category: string
+  updatedAt: string
+  uploaded?: boolean
+}
+
+export interface RetrievedDocument {
+  id: string
+  name: string
+  page: number
+  section: string
+  score: number
+  category: string
+}
+
+export interface ResponseMetadata {
+  embeddingModel: string
+  llmModel: string
+  chunksRetrieved: number
+  latency: string
+  timestamp: string
+}
+
+export interface ChatItem {
+  id: number
+  role: 'user' | 'assistant'
+  content: string
+  detail?: string
+  source?: RetrievedDocument
+  liked?: boolean
+  disliked?: boolean
+  bookmarked?: boolean
+}
+
+export interface NotificationItem {
+  id: string
+  title: string
+  description: string
+  time: string
+  read: boolean
+  tone: 'blue' | 'green' | 'purple'
+}
+
+export interface MockResponse {
+  id: string
+  keywords: string[]
+  category: string
+  answer: string
+  detail: string
+  confidence: number
+  documents: RetrievedDocument[]
+  suggestions: string[]
+}
