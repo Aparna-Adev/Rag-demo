@@ -1,0 +1,40 @@
+import { FileText, Search, X } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { useApp } from '../context/AppContext'
+import { Button } from './ui/Button'
+
+export default function PolicyLibrary({ onViewAll }: { onViewAll: () => void }) {
+  const { documents, setSelectedDocument } = useApp()
+  const [search, setSearch] = useState('')
+  const filtered = useMemo(() => documents.filter(d => d.name.toLowerCase().includes(search.toLowerCase())), [documents, search])
+  const highlight = (name: string) => {
+    if (!search) return name
+    const index = name.toLowerCase().indexOf(search.toLowerCase())
+    if (index < 0) return name
+    return <>{name.slice(0, index)}<mark className="rounded bg-yellow-200 px-0.5 text-inherit">{name.slice(index, index + search.length)}</mark>{name.slice(index + search.length)}</>
+  }
+
+  return (
+    <section className="mt-6">
+      <div className="flex items-center justify-between">
+        <h2 className="section-label">Document Library</h2>
+        <span className="text-[9px] font-semibold text-slate-400">{documents.length}</span>
+      </div>
+      <div className="relative mt-2">
+        <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+        <input id="policy-search" value={search} onChange={e => setSearch(e.target.value)} placeholder="Search documents" className="h-9 w-full rounded-xl border border-slate-200 bg-slate-50 pl-8 pr-8 text-[11px] outline-none transition focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-100" aria-label="Search documents" />
+        {search && <button onClick={() => setSearch('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400" aria-label="Clear search"><X size={13} /></button>}
+      </div>
+      <div className="mt-2 space-y-0.5">
+        {filtered.slice(0, 6).map(doc => (
+          <button key={doc.id} onClick={() => setSelectedDocument(doc)} className="group flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left text-[12px] font-medium text-slate-600 transition duration-300 hover:bg-blue-50 hover:text-blue-700">
+            <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-red-50 text-red-500 transition group-hover:scale-105"><FileText size={14} /></span>
+            <span className="truncate">{highlight(doc.name)}</span>
+          </button>
+        ))}
+        {filtered.length === 0 && <div className="rounded-xl border border-dashed border-slate-200 p-3 text-center text-[10px] text-slate-400">No documents yet</div>}
+      </div>
+      <Button variant="secondary" size="sm" className="mt-3 w-full text-xs" onClick={onViewAll}>View all documents</Button>
+    </section>
+  )
+}
